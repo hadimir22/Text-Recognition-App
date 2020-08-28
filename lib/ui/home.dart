@@ -12,11 +12,17 @@ class _HomeState extends State<Home> {
       appBar: AppBar(
         title: Text('Text Extractor'),
         centerTitle: true,
-        backgroundColor: Color(0XFFFF63A1),
+        backgroundColor: Color(0XFF00BFA6),
       ),
       backgroundColor: Colors.white,
       body: Stack(
         children: <Widget>[
+          Container(
+            padding: EdgeInsets.all(10.0),
+            alignment: Alignment.topRight,
+            child: Image.asset('images/sync_files.png',
+                width: 150.0, height: 150.0, fit: BoxFit.fill),
+          ),
           Container(
             padding: EdgeInsets.all(10.0),
             alignment: Alignment.bottomLeft,
@@ -25,17 +31,32 @@ class _HomeState extends State<Home> {
           ),
           Container(
             alignment: Alignment.center,
-            margin: EdgeInsets.only(top: 150.0),
+            margin: EdgeInsets.only(top: 250.0),
             child: Column(
               children: <Widget>[
-                RaisedButton(
-                  child: Text('Capture'),
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 10.0),
+                  child: RaisedButton(
+                    child: Text('Capture'),
+                    onPressed: () {},
+                    textColor: Colors.white,
+                    color: Color(0XFF06A48F),
+                  ),
                 ),
-                Container(
-                  child: Text('or'),
+                Padding(
+                  padding: const EdgeInsets.all(5.0),
+                  child: Container(
+                    child: Text('or'),
+                  ),
                 ),
-                RaisedButton(
-                  child: Text('Gallery'),
+                Padding(
+                  padding: const EdgeInsets.only(top: 10.0),
+                  child: RaisedButton(
+                    child: Text('Gallery'),
+                    onPressed: () {},
+                    textColor: Colors.white,
+                    color: Color(0XFF06A48F),
+                  ),
                 )
               ],
             ),
