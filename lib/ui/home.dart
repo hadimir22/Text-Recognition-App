@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:firebase_ml_vision/firebase_ml_vision.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -7,44 +8,43 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  Future<void> _optionsDialogBox() {
-    return showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            content: new SingleChildScrollView(
-              child: new ListBody(
-                children: <Widget>[
-                  GestureDetector(
-                    child: new Text('Take a picture'),
-                    onTap: openCamera,
-                  ),
-                  Padding(
-                    padding: EdgeInsets.all(8.0),
-                  ),
-                  GestureDetector(
-                    child: new Text('Select from gallery'),
-                    onTap: openGallery,
-                  ),
-                ],
-              ),
-            ),
-          );
-        });
-  }
+  var imagePath;
 
   void openCamera() async {
     var picture = await ImagePicker.pickImage(
       source: ImageSource.camera,
     );
+    setState(() {
+      imagePath = picture;
+    });
     print("yej $picture");
+    final FirebaseVisionImage visionImage =
+        FirebaseVisionImage.fromFile(imagePath);
+    print('vison $visionImage');
+    final TextRecognizer textRecognizer =
+        FirebaseVision.instance.textRecognizer();
+    final VisionText visionText =
+        await textRecognizer.processImage(visionImage);
+
+    String text = visionText.text;
+    print("osp $text");
+    for (TextBlock block in visionText.blocks) {
+      final Rect boundingBox = block.boundingBox;
+      final List<Offset> cornerPoints = block.cornerPoints;
+      final String text = block.text;
+      final List<RecognizedLanguage> languages = block.recognizedLanguages;
+
+      for (TextLine line in block.lines) {
+        // Same getters as TextBlock
+        for (TextElement element in line.elements) {
+          // Same getters as TextBlock
+          print('element $element');
+        }
+      }
+    }
   }
 
-  void openGallery() async {
-    var gallery = await ImagePicker.pickImage(
-      source: ImageSource.gallery,
-    );
-  }
+  processImage() {}
 
   @override
   Widget build(BuildContext context) {
@@ -83,7 +83,14 @@ class _HomeState extends State<Home> {
                 openCamera();
               },
             ),
-          )
+          ),
+          imagePath != null
+              ? Image.file(
+                  imagePath,
+                  height: 50.0,
+                  width: 50.0,
+                )
+              : Container()
         ],
       ),
     );
