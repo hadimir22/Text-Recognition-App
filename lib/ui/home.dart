@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -6,6 +7,45 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  Future<void> _optionsDialogBox() {
+    return showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            content: new SingleChildScrollView(
+              child: new ListBody(
+                children: <Widget>[
+                  GestureDetector(
+                    child: new Text('Take a picture'),
+                    onTap: openCamera,
+                  ),
+                  Padding(
+                    padding: EdgeInsets.all(8.0),
+                  ),
+                  GestureDetector(
+                    child: new Text('Select from gallery'),
+                    onTap: openGallery,
+                  ),
+                ],
+              ),
+            ),
+          );
+        });
+  }
+
+  void openCamera() async {
+    var picture = await ImagePicker.pickImage(
+      source: ImageSource.camera,
+    );
+    print("yej $picture");
+  }
+
+  void openGallery() async {
+    var gallery = await ImagePicker.pickImage(
+      source: ImageSource.gallery,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -29,36 +69,19 @@ class _HomeState extends State<Home> {
             child: Image.asset('images/file_analysis.png',
                 width: 200.0, height: 200.0, fit: BoxFit.fill),
           ),
-          Container(
-            alignment: Alignment.center,
-            margin: EdgeInsets.only(top: 250.0),
-            child: Column(
-              children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 10.0),
-                  child: RaisedButton(
-                    child: Text('Capture'),
-                    onPressed: () {},
-                    textColor: Colors.white,
-                    color: Color(0XFF06A48F),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(5.0),
-                  child: Container(
-                    child: Text('or'),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 10.0),
-                  child: RaisedButton(
-                    child: Text('Gallery'),
-                    onPressed: () {},
-                    textColor: Colors.white,
-                    color: Color(0XFF06A48F),
-                  ),
-                )
-              ],
+          Center(
+            child: FlatButton(
+              padding: EdgeInsets.all(30.0),
+              color: Color(0XFF06A48F),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(100.0)),
+              child: Icon(
+                Icons.photo_camera,
+                color: Colors.white,
+              ),
+              onPressed: () {
+                openCamera();
+              },
             ),
           )
         ],
