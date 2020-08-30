@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_ml_vision/firebase_ml_vision.dart';
+import 'package:textRecognition/ui/showText.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -17,34 +18,47 @@ class _HomeState extends State<Home> {
     setState(() {
       imagePath = picture;
     });
-    print("yej $picture");
-    final FirebaseVisionImage visionImage =
-        FirebaseVisionImage.fromFile(imagePath);
-    print('vison $visionImage');
-    final TextRecognizer textRecognizer =
-        FirebaseVision.instance.textRecognizer();
-    final VisionText visionText =
-        await textRecognizer.processImage(visionImage);
+    processImage(picture);
+  }
 
-    String text = visionText.text;
-    print("osp $text");
-    for (TextBlock block in visionText.blocks) {
-      final Rect boundingBox = block.boundingBox;
-      final List<Offset> cornerPoints = block.cornerPoints;
-      final String text = block.text;
-      final List<RecognizedLanguage> languages = block.recognizedLanguages;
+  processImage(image) async {
+    try {
+      final FirebaseVisionImage visionImage =
+          FirebaseVisionImage.fromFile(image);
+      print('vison $visionImage');
+      final TextRecognizer textRecognizer =
+          FirebaseVision.instance.textRecognizer();
+      final VisionText visionText =
+          await textRecognizer.processImage(visionImage);
 
-      for (TextLine line in block.lines) {
-        // Same getters as TextBlock
-        for (TextElement element in line.elements) {
+      String text = visionText.text;
+      navigate(text);
+      print("osp $text");
+      for (TextBlock block in visionText.blocks) {
+        final Rect boundingBox = block.boundingBox;
+        final List<Offset> cornerPoints = block.cornerPoints;
+        final String text = block.text;
+        final List<RecognizedLanguage> languages = block.recognizedLanguages;
+
+        for (TextLine line in block.lines) {
           // Same getters as TextBlock
-          print('element $element');
+          for (TextElement element in line.elements) {
+            // Same getters as TextBlock
+            print('element $element');
+          }
         }
       }
+    } catch (e) {
+      print('error $e');
     }
   }
 
-  processImage() {}
+  navigate(extractedText) {
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => ShowText(extractedText: extractedText)));
+  }
 
   @override
   Widget build(BuildContext context) {

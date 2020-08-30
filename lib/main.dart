@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:textRecognition/ui/home.dart';
+import 'package:textRecognition/ui/showText.dart';
 
 void main() async {
   runApp(MaterialApp(
@@ -8,9 +9,6 @@ void main() async {
     initialRoute: 'home',
     routes: {
       'home': (context) => Home(),
-//      '/capture': (context) => TakePictureScreen(
-//            camera: firstCamera,
-//          ),
     },
     home: new Home(),
   ));
