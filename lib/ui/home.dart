@@ -12,15 +12,11 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   final GlobalKey<ScaffoldState> _mainScaffoldKey =
       new GlobalKey<ScaffoldState>();
-  var imagePath;
 
   void openCamera() async {
     var picture = await ImagePicker.pickImage(
       source: ImageSource.camera,
     );
-    setState(() {
-      imagePath = picture;
-    });
     processImage(picture);
   }
 
@@ -28,25 +24,29 @@ class _HomeState extends State<Home> {
     try {
       final FirebaseVisionImage visionImage =
           FirebaseVisionImage.fromFile(image);
-      print('vison $visionImage');
       final TextRecognizer textRecognizer =
           FirebaseVision.instance.textRecognizer();
       final VisionText visionText =
           await textRecognizer.processImage(visionImage);
 
       String text = visionText.text;
-      if (text != null || text.length > 0) {
-        navigate(text);
-      } else {
+      if (text.length == 0) {
         _mainScaffoldKey.currentState.showSnackBar(new SnackBar(
             content: new Text(
-          'could not detect text',
+          'could not detect text, please try again',
           style: snakBar(),
         )));
+      } else {
+        navigate(text);
       }
-      print('oslo $text');
+      textRecognizer.close();
     } catch (e) {
       print('error $e');
+      _mainScaffoldKey.currentState.showSnackBar(new SnackBar(
+          content: new Text(
+        'something went wrong',
+        style: snakBar(),
+      )));
     }
   }
 
