@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_ml_vision/firebase_ml_vision.dart';
 import 'package:textRecognition/ui/showText.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -9,6 +10,8 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  final GlobalKey<ScaffoldState> _mainScaffoldKey =
+      new GlobalKey<ScaffoldState>();
   var imagePath;
 
   void openCamera() async {
@@ -32,22 +35,16 @@ class _HomeState extends State<Home> {
           await textRecognizer.processImage(visionImage);
 
       String text = visionText.text;
-      navigate(text);
-      print("osp $text");
-      for (TextBlock block in visionText.blocks) {
-        final Rect boundingBox = block.boundingBox;
-        final List<Offset> cornerPoints = block.cornerPoints;
-        final String text = block.text;
-        final List<RecognizedLanguage> languages = block.recognizedLanguages;
-
-        for (TextLine line in block.lines) {
-          // Same getters as TextBlock
-          for (TextElement element in line.elements) {
-            // Same getters as TextBlock
-            print('element $element');
-          }
-        }
+      if (text != null || text.length > 0) {
+        navigate(text);
+      } else {
+        _mainScaffoldKey.currentState.showSnackBar(new SnackBar(
+            content: new Text(
+          'could not detect text',
+          style: snakBar(),
+        )));
       }
+      print('oslo $text');
     } catch (e) {
       print('error $e');
     }
@@ -63,8 +60,12 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _mainScaffoldKey,
       appBar: AppBar(
-        title: Text('Text Extractor'),
+        title: Text(
+          'Text Extractor',
+          style: screenName(),
+        ),
         centerTitle: true,
         backgroundColor: Color(0XFF00BFA6),
       ),
@@ -98,15 +99,21 @@ class _HomeState extends State<Home> {
               },
             ),
           ),
-          imagePath != null
-              ? Image.file(
-                  imagePath,
-                  height: 50.0,
-                  width: 50.0,
-                )
-              : Container()
         ],
       ),
     );
   }
+}
+
+TextStyle screenName() {
+  return GoogleFonts.josefinSans(
+      textStyle: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold));
+}
+
+TextStyle snakBar() {
+  return GoogleFonts.josefinSans(
+      textStyle: TextStyle(
+          fontSize: 20.0,
+          fontWeight: FontWeight.normal,
+          color: Color(0XFF06A48F)));
 }
