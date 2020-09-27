@@ -8,6 +8,35 @@
   "client": [
     {
       "client_info": {
+        "mobilesdk_app_id": "1:592391429089:android:8a1baddb02ac25978350a0",
+        "android_client_info": {
+          "package_name": "com.emzah.textRecognition"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "592391429089-sohui4dloue0l7lq41spt277u989gp0b.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCUGXA_BJIdodN3AgkDXayvNnYH6lrucN0"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "592391429089-sohui4dloue0l7lq41spt277u989gp0b.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
         "mobilesdk_app_id": "1:592391429089:android:df5686d4c19edfc38350a0",
         "android_client_info": {
           "package_name": "com.example.textRecognition"
